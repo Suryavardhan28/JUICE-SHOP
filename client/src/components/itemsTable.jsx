@@ -8,6 +8,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { useSelector } from 'react-redux';
+import { Button } from '@material-ui/core';
+import { order } from '../reducers/orderSlice';
+import { useDispatch } from 'react-redux';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -28,25 +32,29 @@ const StyledTableRow = withStyles((theme) => ({
   
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159,1212),
-  createData('Ice cream sandwich', 237,1313),
-  createData('Eclair', 262 ,1313),
-  createData('Cupcake', 305,1313),
-  createData('Gingerbread', 356,131331),
-];
-
 const useStyles = makeStyles({
   minWidth:700,
 });
 
+
 export default function ItemsTables() {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
+  const { newOrder } = useSelector(
+    (state) => state.order
+  );
+  const {data}=newOrder;
+  const [value,setValue] = React.useState("");
+  const [id,setId] = React.useState("");
+  const CalculatrPrice = (e) =>{
+    setValue(e.target.value)
+    setId(e.target.id)
+  }
+  
+  const AddToCart = () =>{
+    dispatch (order (value,id))
+  }
+ 
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
@@ -54,35 +62,33 @@ export default function ItemsTables() {
           <TableRow >
             <StyledTableCell>NAME</StyledTableCell>
             <StyledTableCell >OUANTITY</StyledTableCell>
-            <StyledTableCell >PRICE</StyledTableCell>
-            <StyledTableCell></StyledTableCell>
+            <StyledTableCell >PRICE PER ITEM</StyledTableCell>
             <StyledTableCell>ADD</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {data.map((row) => (
+            <StyledTableRow >
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {row.juice_name}
               </StyledTableCell>
               <StyledTableCell ><div>
-           <select name="QUANTITY">
-               <option value="0" selected>0</option>
-               <option value="1">1</option>
-               <option value="2">2</option>
-               <option value="4">4</option>
-               <option value="5">5</option>
-               <option value="6">6</option>
-               <option value="7">7</option>
-               <option value="8">8</option>
-               <option value="9">9</option>
-               <option value="10">10</option>
+           <select  onChange={CalculatrPrice} id={row.juice_id}>
+               <option value={0}  selected>0</option>
+               <option value={1} >1</option>
+               <option value={2} >2</option>
+               <option value={4} >4</option>
+               <option value={5} >5</option>
+               <option value={6} >6</option>
+               <option value={7} >7</option>
+               <option value={8} >8</option>
+               <option value={9} >9</option>
+               <option value={10} >10</option>
            </select>
        </div>
        </StyledTableCell>
-              <StyledTableCell >{row.fat}</StyledTableCell>
-              <StyledTableCell >{row.carbs}</StyledTableCell>
-              <StyledTableCell ><AddCircleIcon/></StyledTableCell>
+              <StyledTableCell >{row.juice_price}</StyledTableCell>
+              <StyledTableCell ><Button onClick={AddToCart}><AddCircleIcon/></Button></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

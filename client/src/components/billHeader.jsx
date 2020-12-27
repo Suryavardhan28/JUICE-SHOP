@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header() {
+export default function BillHeader() {
   const classes = useStyles();
 
   return (
@@ -26,9 +27,8 @@ export default function Header() {
       <AppBar position="static" style={{background:"#1D1D44",borderRadius:"10px"}}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            News
+            <Button color="inherit"><ArrowBackIosIcon style={{width:"1.2rem"}}></ArrowBackIosIcon>Back to order</Button>
           </Typography>
-          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
     </div>
