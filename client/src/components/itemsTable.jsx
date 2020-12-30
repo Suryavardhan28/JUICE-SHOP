@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
 import { Button } from '@material-ui/core';
 import { order } from '../reducers/orderSlice';
 import { useDispatch } from 'react-redux';
@@ -40,18 +40,26 @@ const useStyles = makeStyles({
 export default function ItemsTables() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { newOrder } = useSelector(
-    (state) => state.order
-  );
-  const {data}=newOrder;
-  const [value,setValue] = React.useState("");
-  const [id,setId] = React.useState("");
+ const [data,setData]=React.useState([]);
+ const [value,setValue]=React.useState("");
+  useEffect(() => {
+    axios.get("http://localhost:5000/juice_items")
+    .then(res=>{
+      console.log(res.data.data)
+      setData(res.data.data)
+    }) 
+    .catch(err=>{
+      console.log(err)
+    })  
+ },[])
+
+
+ 
   const CalculatrPrice = (e) =>{
     setValue(e.target.value)
-    setId(e.target.id)
   }
   
-  const AddToCart = () =>{
+  const AddToCart = (id) =>{
     dispatch (order (value,id))
   }
  
@@ -68,7 +76,7 @@ export default function ItemsTables() {
         </TableHead>
         <TableBody>
           {data.map((row) => (
-            <StyledTableRow >
+            <StyledTableRow key={row.juice_id}>
               <StyledTableCell component="th" scope="row">
                 {row.juice_name}
               </StyledTableCell>
@@ -88,7 +96,7 @@ export default function ItemsTables() {
        </div>
        </StyledTableCell>
               <StyledTableCell >{row.juice_price}</StyledTableCell>
-              <StyledTableCell ><Button onClick={AddToCart}><AddCircleIcon/></Button></StyledTableCell>
+              <StyledTableCell ><Button onClick={()=>AddToCart(row.juice_id)}><AddCircleIcon/></Button></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -1,42 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
+
 export const orderSlice = createSlice({
   name: 'order',
   initialState: {
-    newOrder:[],
-    newBill:'',
-    newId:'',
-   },
-  reducers: {
-    orderDetails: (state, action) => {
-      state.newOrder = action.payload;
-    },
-    orderBill: (state, action) => {
-      state.newBill = action.payload;
-    },
-    orderId: (state, action) => {
-      state.newId = action.payload;
-    },
+   newOrder:[],
   },
+  reducers: {
+    order_details: (state, action) => {
+      state.newOrder= [...state.newOrder,action.payload];
+  },
+}
 });
 
 export const {
-  orderDetails,
-  orderBill,
-  orderId,
-} =orderSlice.actions;
+  order_details,
+} = orderSlice.actions;
 
 export const order = (value,id) => async (dispatch) => {
   try {
-    const { data } = await axios.get(
-      'http://localhost:5000/juice_items'
-    );
-    dispatch(orderDetails(data));
-    dispatch(orderBill(value));
-    dispatch(orderId(id));
+    console.log("came here")
+    console.log(id)
+    const { data } = await axios.get(`http://localhost:5000/juice_items/${id}`)  
+    dispatch(order_details({...(data.data[0]),value:value}));
+    console.log(data.data)
   } catch (error) {
-    console.log(error.response.data);
+    console.log("error");
   }
 };
 

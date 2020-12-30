@@ -22,6 +22,16 @@ app.get("/juice_items", async(req,res)=> {
         res.status(500).json({status:"failed"})
     }});
 
+app.get("/juice_items/:id", async(req,res)=> {
+    try {
+        const results=  await db.query("Select * from juice_items where juice_id=$1",[req.params.id]);
+        console.log(results.rows)
+          res.status(200).json({status:"success",data: results.rows}
+      )}
+     catch (error) {
+        res.status(500).json({status:"failed"})
+    }});
+
 const port= process.env.PORT; 
 
 app.listen(port,()=>{

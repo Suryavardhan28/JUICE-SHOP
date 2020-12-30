@@ -17,33 +17,15 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Eclair', 262, 16.0),
-  createData('Cupcake', 305, 3.7),
-  createData('Gingerbread', 356, 16.0),
-];
 
 function BillPage() {
   const classes = useStyles();
   const { newOrder } = useSelector(
     (state) => state.order
   );
-  const { newBill } = useSelector(
-    (state) => state.order
-  );
-  const { newId } = useSelector(
-    (state) => state.order
-  );
-
-  const {data}=newOrder;
-  const {qty}=newBill;
-  const {billId}=newId;
+  const data=newOrder;
+  const totalPrice = newOrder.reduce((acc , curr) => acc + (curr.value*curr.juice_price), 0);
 
   return (
     <Grid container>
@@ -66,13 +48,16 @@ function BillPage() {
                   <TableCell component="th" scope="row">
                     {row.juice_name}
                   </TableCell>
-                  <TableCell >{qty}</TableCell>
-                  <TableCell >{qty*row.juice_price}</TableCell>
+                  <TableCell >{row.value}</TableCell>
+                  <TableCell >Rs.{row.value*row.juice_price}</TableCell>
                 </TableRow>     
               ))}        
             </TableBody>
           </Table>
         </TableContainer>
+      </Grid>
+      <Grid item style={{backgroundColor:"whitesmoke",borderRadius:"10px",marginLeft:"80vw",marginTop:"20px"}}>
+         <p style={{fontFamily:'sans-serif',padding:"0 20px"}}>SUBTOTAL PRICE : Rs.{totalPrice}</p>
       </Grid>
     </Grid>
   )
